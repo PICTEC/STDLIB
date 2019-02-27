@@ -13,7 +13,7 @@ class AllPassKernelInitializer(keras.initializers.Initializer):
         else:
             step = int(shape[0] / 4)
             width = shape[1]
-            print step, width
+            print(step, width)
             assert step == width
             return K.concatenate([K.zeros((step, width), dtype = dtype),
                 K.constant(self.value, shape = K.eye(step), dtype = dtype),

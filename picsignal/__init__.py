@@ -1,6 +1,3 @@
-# populate the namespaces
-
-import picsignal.modules
-import picsignal.visualization
-
-import picsignal.general
+from . import general
+from . import modules
+from . import visualization

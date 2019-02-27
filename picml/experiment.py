@@ -10,8 +10,6 @@ import pickle
 import scipy.io.wavfile as sio
 import time
 
-import loaders.estimator
-from loaders.utils import ProgressBar
 
 class Experiment(object):
     def run(self):
@@ -248,15 +246,11 @@ class GANExperiment(SingleExperiment):
             self.discriminator.summary()
             self.discriminator._make_train_function()
             self.trainer._make_train_function()
-            if verbose:
-                pb = ProgressBar()
-                pb.set_max(iterations)
             if self.adaptive:
                 discriminator_loss_real, discriminator_loss_fake = [5], [5]
                 loss = [0, 30, 0]
                 iterations *= 2
                 turns = 0
-                pb.set_max(iterations)
                 for i in range(iterations):
                     if sum([sum(discriminator_loss_real), sum(discriminator_loss_fake)]) > self.D_limit:
                         discriminator_loss_real, discriminator_loss_fake = self._discriminator_step()
@@ -274,8 +268,6 @@ class GANExperiment(SingleExperiment):
                     self.history["discriminator_loss_real"].append(discriminator_loss_real)
                     self.history["discriminator_loss_fake"].append(discriminator_loss_fake)
                     self.history["loss"].append(loss)
-                    if verbose:
-                        pb.step("{}({}), {}, {}, {}".format(step, turns, discriminator_loss_real, discriminator_loss_fake, loss))
             else:
                 for i in range(iterations):
                     discriminator_loss_real, discriminator_loss_fake = self._discriminator_step()
@@ -283,8 +275,6 @@ class GANExperiment(SingleExperiment):
                     self.history["discriminator_loss_real"].append(discriminator_loss_real)
                     self.history["discriminator_loss_fake"].append(discriminator_loss_fake)
                     self.history["loss"].append(loss)
-                    if verbose:
-                        pb.step("{}, {}, {}".format(discriminator_loss_real, discriminator_loss_fake, loss))
             logging.info("Testing...")
             K.set_learning_phase(0)
             if type(self.test_data) != tuple:

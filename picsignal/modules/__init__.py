@@ -1,3 +1,3 @@
-import picsignal.modules.beamforming
-import picsignal.modules.dae
-import picsignal.modules.masking
+from .beamforming import *
+from .dae import *
+from .masking import *
