@@ -1,6 +1,6 @@
 # populate the namespaces
 
-from audio import *
-from data import *
-from utilities import *
-from visualization import *
+import picsignal.modules
+import picsignal.visualization
+
+import picsignal.general

@@ -136,18 +136,7 @@ def push(fname):
         print("File {} is probably empty".format(fname))
 
 
-if __name__ == '__main__':
-    if len(sysargv) == 1:
-        task = "status"
-    elif sysargv[1] == "status":
-        task = "status"
-    elif sysargv[1] == "pull":
-        task = "pull"
-    elif sysargv[1] == "push":
-        task = "push"
-    else:
-        print("FATAL: incorrect task [status, pull, push]")
-        quit()
+def git(task):
     items = list_drive()
     staged, unstaged = list_files()
     unpulled, staged = diff(staged, items)
@@ -173,3 +162,18 @@ if __name__ == '__main__':
                 staged.append(fileobj)
         with open(".hashes", "w") as f:
             json.dump(staged, f)
+
+
+if __name__ == '__main__':
+    if len(sysargv) == 1:
+        task = "status"
+    elif sysargv[1] == "status":
+        task = "status"
+    elif sysargv[1] == "pull":
+        task = "pull"
+    elif sysargv[1] == "push":
+        task = "push"
+    else:
+        print("FATAL: incorrect task [status, pull, push]")
+        quit()
+    Git(task)

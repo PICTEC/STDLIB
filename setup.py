@@ -7,15 +7,16 @@ def readme():
 
 setup(name='picstdlib',
       version='0.1',
-      description='Helper package for signal/speech enhancement/processing',
+      description='Set of utilities, tools and models installable',
       long_description=readme(),
-      url='http://gitlab.com/pictec/picsignal',
+      url='http://github.com/PICTEC/STDLIB',
       author='Paweł Tomasik',
       author_email='pawel.tomasik@pictec.eu',
-      license=None,
-      packages=['picsignal'],
+      license='MIT',
+      packages=['picsignal', 'picml', 'picutils'],
       zip_safe=False,
-      install_requires=['numpy', 'librosa', 'scipy', 'keras'],
+      install_requires=['numpy', 'librosa', 'scipy', 'keras', 'google-api-core'],
       test_suite="nose.collector",
       tests_require=['pep8', 'nose>=1.0'],
-      setup_requires=['nose>=1.0'])
+      setup_requires=['nose>=1.0'],
+      include_package_data=True)

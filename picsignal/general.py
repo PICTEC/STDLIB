@@ -16,3 +16,15 @@ def wiener(spec, sigma):
     elif transfer.ndim == 2:
         spec = transfer * spec
     return spec
+
+def cqt(x, sr=16000, per_octave = 60, ):
+    base_fq = float(sr) / len(x)
+    octaves = np.log2((sr/2) / base_fq)
+    n_bins = np.floor(octaves * per_octave).astype(np.int32)
+    step = 2 ** (1. / per_octave)
+    Q = (step ** 0.5) # half semitone(if per_octave = 12) in each direction
+    X = np.zeros(n_bins, dtype=np.complex64)
+    N = Q * (sr / 2) / (base_fq * step ** np.arange(n_bins))
+    for k in range(n_bins):
+        X[k] = np.sum(x * np.exp(-2 * 1j * np.pi * Q / N[k] * np.arange(len(x)))) /  N[k]
+    return X
