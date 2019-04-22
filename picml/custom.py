@@ -2,8 +2,6 @@
 A stash of custom Keras objects and helpers
 """
 
-
-
 import keras
 import keras.backend as K
 import numpy as np
@@ -121,9 +119,43 @@ def l4_loss(true, pred):
     """
     return K.mean(K.square(K.square(pred - true)), axis=-1)
 
+def add_coord_2d(layer):
+    """
+    Change the next conv layer to 2D direction to take position into account
+    """
+    shape = layer.shape[1:].as_list()
+    x = Lambda(lambda x: 
+       	K.stack([K.tile(K.stack([K.arange(shape[0])]), shape[1])], axis=-1))(layer)
+    y = Lambda(lambda x:
+       	K.stack([K.tile(K.stack([K.arange(shape[0])], axis=-1), shape[1])], axis=-1))(layer)
+    return concatenate([layer, x, y])
+
+
+class LossHistoryLogger(keras.callbacks.Callback):
+    def __init__(self):
+        super().__init__()
+        self.max_error = []
+        self.mean_error = []
+    def on_batch_end(self, batch, logs={}):
+        self.max_error.append(logs.get('maximal_error'))
+        self.mean_error.append(logs.get('mean_absolute_error'))
+    def on_train_end(self, logs):
+        import json
+        print(self.max_error)
+        print(self.mean_error)
+        self.max_error = [float(x) for x in self.max_error]
+        self.mean_error = [float(x) for x in self.mean_error]
+        with open("logs.json", "w") as f:
+            f.write(json.dumps({
+                "max_error": self.max_error,
+                "mae": self.mean_error
+            }))
+
 custom_objects = {"CLR": CLR,
                   "Constr": Constr,
                   "maximal_error": maximal_error,
                   "tf": tf,
                   "identity_loss": identity_loss,
-                  "l4_loss": l4_loss}
+                  "l4_loss": l4_loss,
+                  "add_coord_2d": add_coord_2d,
+                  "LossHistoryLogger": LossHistoryLogger}
